@@ -68,13 +68,16 @@
             placeholder="请输入名称"
           ></el-input>
           <strong v-else class="h-full">
-            <span @click="cellEdit( '_n_m_' + scope.$index, 'wl-name')">
+            <span @click="cellEdit('_n_m_' + scope.$index, 'wl-name')">
               {{
               nameFormatter
-              ?
-              nameFormatter(scope.row, scope.column, scope.treeNode,scope.$index)
-              :
-              scope.row[selfProps.name]
+              ? nameFormatter(
+              scope.row,
+              scope.column,
+              scope.treeNode,
+              scope.$index
+              )
+              : scope.row[selfProps.name]
               }}
             </span>
             <span class="name-col-edit">
@@ -91,9 +94,10 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="showDate"
         :resizable="false"
         fixed
-        width="160"
+        :width="longWidth"
         align="center"
         :prop="selfProps.startDate"
         label="开始日期"
@@ -115,14 +119,15 @@
           <div
             v-else
             class="h-full"
-            @click="cellEdit( '_s_d_' + scope.$index, 'wl-start-date')"
-          >{{timeFormat(scope.row[selfProps.startDate])}}</div>
+            @click="cellEdit('_s_d_' + scope.$index, 'wl-start-date')"
+          >{{ timeFormat(scope.row[selfProps.startDate]) }}</div>
         </template>
       </el-table-column>
       <el-table-column
+        v-if="showDate"
         fixed
         :resizable="false"
-        width="160"
+        :width="longWidth"
         align="center"
         :prop="selfProps.endDate"
         label="结束日期"
@@ -145,7 +150,7 @@
             v-else
             class="h-full"
             @click="cellEdit('_e_d_' + scope.$index, 'wl-end-date')"
-          >{{timeFormat(scope.row[selfProps.endDate])}}</div>
+          >{{ timeFormat(scope.row[selfProps.endDate]) }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -177,8 +182,10 @@
           <div
             v-else
             class="h-full"
-            @click="preCellEdit(scope.row, '_p_t_' + scope.$index, 'wl-pre-select')"
-          >{{preFormat(scope.row)}}</div>
+            @click="
+              preCellEdit(scope.row, '_p_t_' + scope.$index, 'wl-pre-select')
+            "
+          >{{ preFormat(scope.row) }}</div>
         </template>
       </el-table-column>
       <slot></slot>
@@ -197,6 +204,7 @@
           :resizable="false"
           :key="month.id"
           :label="month.name"
+           :width="shortWidth"
         >
           <template slot-scope="scope">
             <div :class="dayGanttType(scope.row, month.full_date, 'months')"></div>
@@ -219,6 +227,7 @@
           :resizable="false"
           :key="t.id"
           :label="t.name"
+           :width="shortWidth"
         >
           <template slot-scope="scope">
             <div :class="dayGanttType(scope.row, t.full_date, 'week')"></div>
@@ -241,6 +250,7 @@
           :resizable="false"
           :key="t.id"
           :label="t.name"
+           :width="shortWidth"
         >
           <template slot-scope="scope">
             <div :class="dayGanttType(scope.row, t.full_date)"></div>
@@ -265,6 +275,7 @@ import {
   flattenDeepParents,
   regDeepParents
 } from "@/util/array.js"; // 导入数组操作函数
+import { type } from "os";
 
 export default {
   name: "wlGantt",
@@ -286,6 +297,18 @@ export default {
     };
   },
   props: {
+    shortWidth: {
+      type: Number,
+      default: 20
+    },
+    longWidth: {
+      type: Number,
+      default: 100
+    },
+    showDate: {
+      type: Boolean,
+      default: true
+    },
     // gantt数据
     data: {
       type: Array,

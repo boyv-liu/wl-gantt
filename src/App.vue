@@ -13,6 +13,9 @@
         date-type="monthAndDay"
         :data="data"
         :contextMenuOptions="contextMenuOptions"
+        :short-width="shortWidth"
+        :long-width="longWidth"
+        :show-date="showDate"
         @selection-change="selectionChange"
         @expand-change="expandChange"
         @timeChange="timeChange"
@@ -32,6 +35,9 @@ export default {
   name: "app",
   data() {
     return {
+      shortWidth: 40,
+      longWidth: 100,
+      showDate: false,
       data: [
         {
           id: "1",

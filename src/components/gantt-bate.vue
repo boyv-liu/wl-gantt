@@ -1,67 +1,69 @@
 <template>
-<div class="wl-gantt"> 
-  <!-- 主体图形部分 -->
-  <el-table
-    ref="wl-gantt"
-    :fit="fit"
-    :size="size"
-    :border="border"
-    :data="selfData"
-    :stripe="stripe"
-    :height="height"
-    :row-key="rowKey"
-    :row-style="rowStyle"
-    :class="dateTypeClass"
-    :cell-style="cellStyle"
-    :max-height="maxHeight"
-    :tree-props="selfProps"
-    :current-row-key="rowKey"
-    :row-class-name="rowClassName"
-    :cell-class-name="cellClassName"
-    :expand-row-keys="expandRowKeys"
-    :header-row-style="headerRowStyle"
-    :header-cell-style="headerCellStyle"
-    :default-expand-all="defaultExpandAll"
-    :header-row-class-name="headerRowClassName"
-    :highlight-current-row="highlightCurrentRow"
-    :header-cell-class-name="headerCellClassName"
-    @header-contextmenu="handleHeaderContextMenu"
-    @selection-change="handleSelectionChange"
-    @row-contextmenu="handleRowContextMenu"
-    @current-change="handleCurrentChange"
-    @cell-mouse-enter="handleMouseEnter"
-    @cell-mouse-leave="handleMouseLeave"
-    @expand-change="handleExpandChange"
-    @filter-change="handleFilterChange"
-    @cell-dblclick="handleCellDbClick"
-    @header-click="handleHeaderClick"
-    @row-dblclick="handleRowDbClick"
-    @sort-change="handleSortChange"
-    @cell-click="handleCellClick"
-    @select-all="handleSelectAll"
-    @row-click="handleRowClick"
-    @select="handleSelect"
+  <div class="wl-gantt">
+    <!-- 主体图形部分 -->
+    <el-table
+      ref="wl-gantt"
+      :fit="fit"
+      :size="size"
+      :border="border"
+      :data="selfData"
+      :stripe="stripe"
+      :height="height"
+      :row-key="rowKey"
+      :row-style="rowStyle"
+      :class="dateTypeClass"
+      :cell-style="cellStyle"
+      :max-height="maxHeight"
+      :tree-props="selfProps"
+      :current-row-key="rowKey"
+      :row-class-name="rowClassName"
+      :cell-class-name="cellClassName"
+      :expand-row-keys="expandRowKeys"
+      :header-row-style="headerRowStyle"
+      :header-cell-style="headerCellStyle"
+      :default-expand-all="defaultExpandAll"
+      :header-row-class-name="headerRowClassName"
+      :highlight-current-row="highlightCurrentRow"
+      :header-cell-class-name="headerCellClassName"
+      @header-contextmenu="handleHeaderContextMenu"
+      @selection-change="handleSelectionChange"
+      @row-contextmenu="handleRowContextMenu"
+      @current-change="handleCurrentChange"
+      @cell-mouse-enter="handleMouseEnter"
+      @cell-mouse-leave="handleMouseLeave"
+      @expand-change="handleExpandChange"
+      @filter-change="handleFilterChange"
+      @cell-dblclick="handleCellDbClick"
+      @header-click="handleHeaderClick"
+      @row-dblclick="handleRowDbClick"
+      @sort-change="handleSortChange"
+      @cell-click="handleCellClick"
+      @select-all="handleSelectAll"
+      @row-click="handleRowClick"
+      @select="handleSelect"
     >
-    <slot name="prv"></slot>
-    <el-table-column
-      fixed
-      label="名称"
-      min-width="200"
-      show-overflow-tooltip
-      :prop="selfProps.name"
-      :formatter="nameFormatter"
-    ></el-table-column>
-    <el-table-column
-      :resizable="false"
-      fixed
-      min-width="110"
-      align="center"
-      :prop="selfProps.startDate"
-      label="开始日期"
-     >
-      <template slot-scope="scope">
-        {{timeFormat(scope.row[selfProps.startDate])}}
-        <!-- <el-date-picker
+      <slot name="prv"></slot>
+      <el-table-column
+        fixed
+        label="名称"
+        min-width="200"
+        show-overflow-tooltip
+        :prop="selfProps.name"
+        :formatter="nameFormatter"
+      ></el-table-column>
+      <el-table-column
+        :width="longWidth"
+        v-if="showDate"
+        :resizable="false"
+        fixed
+        min-width="110"
+        align="center"
+        :prop="selfProps.startDate"
+        label="开始日期"
+      >
+        <template slot-scope="scope">
+          {{timeFormat(scope.row[selfProps.startDate])}}
+          <!-- <el-date-picker
           v-if="self_cell_edit === '_s_d_' + scope.$index"
           v-model="scope.row[selfProps.startDate]"
           @change="startDateChange(scope.row)"
@@ -78,20 +80,22 @@
           v-else
           class="h-full"
           @click="cellEdit( '_s_d_' + scope.$index, 'wl-start-date')"
-        >{{timeFormat(scope.row[selfProps.startDate])}}</div> -->
-      </template>
-    </el-table-column>
-    <el-table-column
-      fixed
-      :resizable="false"
-      min-width="110"
-      align="center"
-      :prop="selfProps.endDate"
-      label="结束日期"
+          >{{timeFormat(scope.row[selfProps.startDate])}}</div>-->
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="showDate"
+        :width="longWidth"
+        fixed
+        :resizable="false"
+        min-width="110"
+        align="center"
+        :prop="selfProps.endDate"
+        label="结束日期"
       >
-      <template slot-scope="scope">
-        {{timeFormat(scope.row[selfProps.endDate])}}
-        <!-- <el-date-picker
+        <template slot-scope="scope">
+          {{timeFormat(scope.row[selfProps.endDate])}}
+          <!-- <el-date-picker
           v-if="self_cell_edit === '_e_d_' + scope.$index"
           v-model="scope.row[selfProps.endDate]"
           @change="endDateChange(scope.row)"
@@ -108,21 +112,21 @@
           v-else
           class="h-full"
           @click="cellEdit('_e_d_' + scope.$index, 'wl-end-date')"
-        >{{timeFormat(scope.row[selfProps.endDate])}}</div> -->
-      </template>
-    </el-table-column>
-    <el-table-column
-      v-if="usePreColumn"
-      align="center"
-      min-width="100"
-      label="前置任务"
-      show-overflow-tooltip
-      :prop="selfProps.endDate"
+          >{{timeFormat(scope.row[selfProps.endDate])}}</div>-->
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="usePreColumn"
+        align="center"
+        min-width="100"
+        label="前置任务"
+        show-overflow-tooltip
+        :prop="selfProps.endDate"
       >
-      <template slot-scope="scope">
-        {{preFormat(scope.row)}}
-        <!-- @blur="self_cell_edit = null" @blur="preEditBlur" -->
-        <!-- <el-select
+        <template slot-scope="scope">
+          {{preFormat(scope.row)}}
+          <!-- @blur="self_cell_edit = null" @blur="preEditBlur" -->
+          <!-- <el-select
           v-if="self_cell_edit === '_p_t_' + scope.$index"
           @change="preChange"
           v-model="scope.row[selfProps.pre]"
@@ -142,139 +146,151 @@
           v-else
           class="h-full"
           @click="preCellEdit(scope.row, '_p_t_' + scope.$index, 'wl-pre-select')"
-        >{{preFormat(scope.row)}}</div> -->
-      </template>
-    </el-table-column>
-    <slot></slot>
-    <!-- year and mouth gantt -->
-    <template v-if="self_date_type === 'yearAndMonth'">
-      <el-table-column
-        :resizable="false"
-        v-for="year in ganttTitleDate"
-        :label="year.name"
-        :key="year.id"
-      >
-        <el-table-column
-          class-name="wl-gantt-item"
-          v-for="month in year.children"
-          :resizable="false"
-          :key="month.id"
-          :label="month.name"
-        >
-          <template slot-scope="scope">
-            <div :class="dayGanttType(scope.row, month.full_date, 'months')"></div>
-            <div v-if="useRealTime" :class="realDayGanttType(scope.row, month.full_date, 'months')"></div>
-          </template>
-        </el-table-column>
+          >{{preFormat(scope.row)}}</div>-->
+        </template>
       </el-table-column>
-    </template>
-    <!-- year and week gantt -->
-    <template v-else-if="self_date_type === 'yearAndWeek'">
-      <el-table-column
-        :resizable="false"
-        v-for="i in ganttTitleDate"
-        :label="i.full_date"
-        :key="i.id"
-      >
+      <slot></slot>
+      <!-- year and mouth gantt -->
+      <template v-if="self_date_type === 'yearAndMonth'">
         <el-table-column
-          class-name="wl-gantt-item"
-          v-for="t in i.children"
           :resizable="false"
-          :key="t.id"
-          :label="t.name"
+          v-for="year in ganttTitleDate"
+          :label="year.name"
+          :key="year.id"
         >
-          <template slot-scope="scope">
-            <div :class="dayGanttType(scope.row, t.full_date, 'week')"></div>
-            <div v-if="useRealTime" :class="realDayGanttType(scope.row, t.full_date, 'week')"></div>
-          </template>
-        </el-table-column>
-      </el-table-column>
-    </template>
-    <!-- mouth and day gantt -->
-    <template v-else>
-      <el-table-column
-        :resizable="false"
-        v-for="i in ganttTitleDate"
-        :label="i.full_date"
-        :key="i.id"
-      >
-        <el-table-column
-          class-name="wl-gantt-item"
-          v-for="t in i.children"
-          :resizable="false"
-          :key="t.id"
-          :label="t.name"
-        >
-          <template slot-scope="scope">
-            <div :class="dayGanttType(scope.row, t.full_date)"></div>
-            <div v-if="useRealTime" :class="realDayGanttType(scope.row, t.full_date)"></div>
-          </template>
-        </el-table-column>
-      </el-table-column>
-    </template>
-  </el-table>
-  <!-- 编辑表单部分 -->
-  <el-dialog class="wl-gantt-dialog" title="编辑任务" :modal="false" :visible.sync="task_edit_show" width="420px">
-  <el-form :model="task_edit_form" size="medium" label-width="110px">
-    <el-form-item label="任务名称">
-      <el-input v-model="task_edit_form.name" placeholder="请填写任务名称"></el-input>
-    </el-form-item>
-    <el-form-item label="开始时间">
-      <el-date-picker
-        class="u-full"
-        v-model="task_edit_form.start_time"
-        type="date"
-        placeholder="请选择开始时间">
-      </el-date-picker>
-    </el-form-item>
-    <el-form-item label="结束时间">
-      <el-date-picker
-        class="u-full"
-        v-model="task_edit_form.end_time"
-        type="date"
-        placeholder="请选择结束时间">
-      </el-date-picker>
-    </el-form-item>
-    <el-form-item label="实际开始时间">
-      <el-date-picker
-        class="u-full"
-        v-model="task_edit_form.real_start_time"
-        type="date"
-        placeholder="请选择实际开始时间">
-      </el-date-picker>
-    </el-form-item>
-    <el-form-item label="实际结束时间">
-      <el-date-picker
-        class="u-full"
-        v-model="task_edit_form.real_end_time"
-        type="date"
-        placeholder="请选择实际结束时间">
-      </el-date-picker>
-    </el-form-item>
-    <el-form-item label="前置任务">
-      <el-select
-          class="u-full"
-          @change="preChange"
-          v-model="task_edit_form.pre_task"
-          collapse-tags
-          :multiple="preMultiple"
-          placeholder="请选择前置任务"
+          <el-table-column
+            class-name="wl-gantt-item"
+            v-for="month in year.children"
+            :resizable="false"
+            :key="month.id"
+            :label="month.name"
+            :width="shortWidth"
           >
-          <el-option
-            v-for="item in pre_options"
-            :key="item[selfProps.id]"
-            :label="item[selfProps.name]"
-            :value="item[selfProps.id]"
-          ></el-option>
-        </el-select>
-    </el-form-item>
-  </el-form>
-  <div slot="footer" class="dialog-footer">
-    <el-button @click="task_edit_show = false">取 消</el-button>
-    <el-button type="primary" @click="taskEdit()">确 定</el-button>
+            <template slot-scope="scope">
+              <div :class="dayGanttType(scope.row, month.full_date, 'months')"></div>
+              <div
+                v-if="useRealTime"
+                :class="realDayGanttType(scope.row, month.full_date, 'months')"
+              ></div>
+            </template>
+          </el-table-column>
+        </el-table-column>
+      </template>
+      <!-- year and week gantt -->
+      <template v-else-if="self_date_type === 'yearAndWeek'">
+        <el-table-column
+          :resizable="false"
+          v-for="i in ganttTitleDate"
+          :label="i.full_date"
+          :key="i.id"
+        >
+          <el-table-column
+            class-name="wl-gantt-item"
+            v-for="t in i.children"
+            :resizable="false"
+            :key="t.id"
+            :label="t.name"
+            :width="shortWidth"
+          >
+            <template slot-scope="scope">
+              <div :class="dayGanttType(scope.row, t.full_date, 'week')"></div>
+              <div v-if="useRealTime" :class="realDayGanttType(scope.row, t.full_date, 'week')"></div>
+            </template>
+          </el-table-column>
+        </el-table-column>
+      </template>
+      <!-- mouth and day gantt -->
+      <template v-else>
+        <el-table-column
+          :resizable="false"
+          v-for="i in ganttTitleDate"
+          :label="i.full_date"
+          :key="i.id"
+        >
+          <el-table-column
+            class-name="wl-gantt-item"
+            v-for="t in i.children"
+            :resizable="false"
+            :key="t.id"
+            :label="t.name"
+            :width="shortWidth"
+          >
+            <template slot-scope="scope">
+              <div :class="dayGanttType(scope.row, t.full_date)"></div>
+              <div v-if="useRealTime" :class="realDayGanttType(scope.row, t.full_date)"></div>
+            </template>
+          </el-table-column>
+        </el-table-column>
+      </template>
+    </el-table>
+    <!-- 编辑表单部分 -->
+    <el-dialog
+      class="wl-gantt-dialog"
+      title="编辑任务"
+      :modal="false"
+      :visible.sync="task_edit_show"
+      width="420px"
+    >
+      <el-form :model="task_edit_form" size="medium" label-width="110px">
+        <el-form-item label="任务名称">
+          <el-input v-model="task_edit_form.name" placeholder="请填写任务名称"></el-input>
+        </el-form-item>
+        <el-form-item label="开始时间">
+          <el-date-picker
+            class="u-full"
+            v-model="task_edit_form.start_time"
+            type="date"
+            placeholder="请选择开始时间"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="结束时间">
+          <el-date-picker
+            class="u-full"
+            v-model="task_edit_form.end_time"
+            type="date"
+            placeholder="请选择结束时间"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="实际开始时间">
+          <el-date-picker
+            class="u-full"
+            v-model="task_edit_form.real_start_time"
+            type="date"
+            placeholder="请选择实际开始时间"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="实际结束时间">
+          <el-date-picker
+            class="u-full"
+            v-model="task_edit_form.real_end_time"
+            type="date"
+            placeholder="请选择实际结束时间"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="前置任务">
+          <el-select
+            class="u-full"
+            @change="preChange"
+            v-model="task_edit_form.pre_task"
+            collapse-tags
+            :multiple="preMultiple"
+            placeholder="请选择前置任务"
+          >
+            <el-option
+              v-for="item in pre_options"
+              :key="item[selfProps.id]"
+              :label="item[selfProps.name]"
+              :value="item[selfProps.id]"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="task_edit_show = false">取 消</el-button>
+        <el-button type="primary" @click="taskEdit()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
-  </el-dialog>
-</div>
 </template>
 
 <script>
@@ -304,6 +320,18 @@ export default {
     };
   },
   props: {
+    shortWidth: {
+      type: Number,
+      default: 20
+    },
+    longWidth: {
+      type: Number,
+      default: 100
+    },
+    showDate: {
+      type: Boolean,
+      default: true
+    },
     // gantt数据
     data: {
       type: Array,
@@ -507,10 +535,8 @@ export default {
       };
     },
     // 内置表格列
-    selfBuiltInColumn(){
-      return {
-        
-      }
+    selfBuiltInColumn() {
+      return {};
     },
     // 根据日期类型改样式
     dateTypeClass() {
@@ -525,8 +551,8 @@ export default {
   },
   methods: {
     // 任务编辑
-    taskEdit(){
-      this.$set(this.edit_row,)
+    taskEdit() {
+      this.$set(this.edit_row);
       this.task_edit_show = false;
     },
     /**
@@ -1520,7 +1546,7 @@ export default {
         real_start_time: row[this.selfProps.realStartDate],
         real_end_time: row[this.selfProps.realEndDate],
         pre_task: row[this.selfProps.pre]
-      }
+      };
       this.task_edit_show = true;
       this.edit_row = row;
       this.$emit("row-dblclick", row, column, event);
@@ -1582,7 +1608,8 @@ $gantt_item_half: 8px;
     }
   }
 
-  .u-full, .u-full.el-input {
+  .u-full,
+  .u-full.el-input {
     width: 100%;
   }
 
@@ -1734,9 +1761,9 @@ $gantt_item_half: 8px;
   }
   // 实际时间gantt结束
 
-    // 任务编辑表单区
-  .wl-gantt-dialog{
-    .el-dialog__body{
+  // 任务编辑表单区
+  .wl-gantt-dialog {
+    .el-dialog__body {
       padding: 0 20px;
     }
   }

@@ -45,7 +45,7 @@
       @select-all="handleSelectAll"
       @row-click="handleRowClick"
       @select="handleSelect"
-      >
+    >
       <template v-if="!ganttOnly">
         <slot name="prv"></slot>
         <el-table-column v-if="useCheckColumn" fixed type="selection" width="55" align="center"></el-table-column>
@@ -94,9 +94,10 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="showDate"
           :resizable="false"
           fixed
-          width="160"
+          :width="longWidth"
           align="center"
           :prop="selfProps.startDate"
           label="开始日期"
@@ -123,9 +124,10 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="showDate"
           fixed
           :resizable="false"
-          width="160"
+          :width="longWidth"
           align="center"
           :prop="selfProps.endDate"
           label="结束日期"
@@ -200,6 +202,7 @@
             :resizable="false"
             :key="month.id"
             :label="month.name"
+            :width="shortWidth"
           >
             <template slot-scope="scope">
               <div :class="dayGanttType(scope.row, month.full_date, 'months')"></div>
@@ -225,6 +228,7 @@
             :resizable="false"
             :key="t.id"
             :label="t.name"
+            :width="shortWidth"
           >
             <template slot-scope="scope">
               <div :class="dayGanttType(scope.row, t.full_date, 'week')"></div>
@@ -247,6 +251,7 @@
             :resizable="false"
             :key="t.id"
             :label="t.name"
+            :width="shortWidth"
           >
             <template slot-scope="scope">
               <div :class="dayGanttType(scope.row, t.full_date)"></div>
@@ -279,6 +284,7 @@ import {
 } from "@/util/array.js"; // 导入数组操作函数
 import ContextMenu from "./components/wl-contextmenu";
 import "@/assets/css/clear.css";
+import { type } from "os";
 
 export default {
   name: "WlGantt",
@@ -337,6 +343,18 @@ export default {
     endDate: {
       type: [String, Object],
       required: true
+    },
+    shortWidth: {
+      type: Number,
+      default: 20
+    },
+    longWidth: {
+      type: Number,
+      default: 100
+    },
+    showDate: {
+      type: Boolean,
+      default: true
     },
     // 是否使用实际开始时间、实际结束时间
     useRealTime: {
