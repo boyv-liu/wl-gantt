@@ -45,6 +45,7 @@
       @select-all="handleSelectAll"
       @row-click="handleRowClick"
       @select="handleSelect"
+      v-model="allStartDate"
     >
       <template v-if="!ganttOnly">
         <slot name="prv"></slot>
@@ -625,6 +626,10 @@ export default {
     },
   },
   methods: {
+    // 处理时间变化
+    DateChange(val) {
+      this.$emit('on-dateChange', val)
+    },
     // 设置dateType
     setDataType(type) {
       this.self_date_type = type
