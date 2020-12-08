@@ -316,7 +316,7 @@ import {
 } from '@/util/array.js' // 导入数组操作函数
 import ContextMenu from './components/wl-contextmenu'
 import '@/assets/css/clear.css'
-import { type } from 'os'
+// import { type } from 'os'
 
 export default {
   name: 'WlGantt',
@@ -535,10 +535,10 @@ export default {
       // console.log(end_date_spilt)  // ivy
       let start_year = Number(start_date_spilt[0])
       let start_mouth = Number(start_date_spilt[1])
-      let start_day = Number(start_date_spilt[2])
+      // let start_day = Number(start_date_spilt[2])
       let end_year = Number(end_date_spilt[0])
       let end_mouth = Number(end_date_spilt[1])
-      let end_day = Number(end_date_spilt[2])
+      // let end_day = Number(end_date_spilt[2])
       // 自动更新日期类型以适应任务时间范围跨度
       if (this.autoGanttDateType) {
         // 计算日期跨度
@@ -981,15 +981,15 @@ export default {
       // 处理开始月份
       let startIsLeap = this.isLeap(start_year)
       let start_mouths = this.generationMonths(
-        start_month,
-        start_day,
+        start_year,
+        start_mouth,
         13,
         startIsLeap
       )
       // 处理结束月份
       let endIsLeap = this.isLeap(end_year)
       let end_mouths = this.generationMonths(
-        end_month,
+        end_year,
         1,
         end_mouth + 1,
         endIsLeap
