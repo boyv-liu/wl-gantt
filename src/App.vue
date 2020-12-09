@@ -113,8 +113,8 @@ export default {
   },
   methods: {
     handelClick() {
-      this.startDate = '2020-1-5'
-      this.endDate = '2020-11-12'
+      this.startDate = '2020-11-1'
+      this.endDate = '2020-11-21'
       console.log(this.startDate, '修改了')
     },
     /**

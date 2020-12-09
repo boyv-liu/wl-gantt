@@ -45,7 +45,6 @@
       @select-all="handleSelectAll"
       @row-click="handleRowClick"
       @select="handleSelect"
-      v-model="allStartDate"
     >
       <template v-if="!ganttOnly">
         <slot name="prv"></slot>
@@ -535,10 +534,10 @@ export default {
       // console.log(end_date_spilt)  // ivy
       let start_year = Number(start_date_spilt[0])
       let start_mouth = Number(start_date_spilt[1])
-      // let start_day = Number(start_date_spilt[2])
+      let start_day = Number(start_date_spilt[2])
       let end_year = Number(end_date_spilt[0])
       let end_mouth = Number(end_date_spilt[1])
-      // let end_day = Number(end_date_spilt[2])
+      let end_day = Number(end_date_spilt[2])
       // 自动更新日期类型以适应任务时间范围跨度
       if (this.autoGanttDateType) {
         // 计算日期跨度
@@ -568,12 +567,12 @@ export default {
       } else if (this.self_date_type === 'monthAndDay') {
         return this.mouthAndDayTitleDate(
           // ivy
-          start_year,
+          // start_year,
           start_mouth,
-          end_year,
-          end_mouth
-          // start_day,
-          // end_day
+          // end_year,
+          end_mouth,
+          start_day,
+          end_day
         )
       } else {
         return this.yearAndMouthTitleDate(
@@ -1048,6 +1047,7 @@ export default {
      * week: Boolean 是否间隔一周
      */
     generationDays(year, month, isLeap = false, week = false) {
+      console.log(year, month)
       let big_month = [1, 3, 5, 7, 8, 10, 12].includes(month)
       let small_month = [4, 6, 9, 11].includes(month)
       let dates_num = big_month ? 32 : small_month ? 31 : isLeap ? 30 : 29 // ivy
@@ -1713,6 +1713,7 @@ export default {
         });
       } */
       this.$emit('row-click', row, column, event)
+      this.contextMenu.show = false
     }, // 当某一行被点击时会触发该事件
     handleRowContextMenu(row, column, event) {
       this.$emit('row-contextmenu', row, column, event)
