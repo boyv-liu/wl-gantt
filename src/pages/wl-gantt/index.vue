@@ -567,12 +567,12 @@ export default {
       } else if (this.self_date_type === 'monthAndDay') {
         return this.mouthAndDayTitleDate(
           // ivy
-          // start_year,
+          start_year,
           start_mouth,
-          // end_year,
-          end_mouth,
-          start_day,
-          end_day
+          end_year,
+          end_mouth
+          // start_day,
+          // end_day
         )
       } else {
         return this.yearAndMouthTitleDate(
